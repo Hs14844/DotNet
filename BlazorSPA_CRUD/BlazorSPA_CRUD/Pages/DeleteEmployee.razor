@@ -1,0 +1,72 @@
+﻿@page "/Delete/{id}"
+@using BlazorSPA_CRUD.Data
+@inject EmployeeService employeeService
+@inject NavigationManager NavigationManager
+@inject ApiService service 
+
+
+<h3>DeleteEmployee</h3>
+
+<h4>Are you sure want to delete this?</h4>
+
+<form>
+    <div class="row">
+        <div class=" col-md-8">
+            <div class="form-group">
+                <label>Employee Id:</label>
+                <label>@employee.EmpId</label>
+            </div>
+            <div class="form-group">
+                <label>Employee Name:</label>
+                <label>@employee.EmpName</label>
+            </div>
+            <div class="form-group">
+                <label>Department:</label>
+                <label>@employee.Department</label>
+            </div>
+            <div class="form-group">
+                <label>Gender:</label>
+                <label>@employee.Gender</label>
+            </div>
+            <div class="form-group">
+                <label>City:</label>
+                <label>@employee.City</label>
+            </div>
+            <div class="form-group">
+                <label>HireDate:</label>
+                <label>@employee.HireDate</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-danger" @onclick="@Delete" value="Delete" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+    BlazorSPA_CRUD.Data.Employee employee = new Data.Employee();
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await Task.Run(() => employeeService.GetEmployeeByIdAsync(Convert.ToInt32(Id)));
+    }
+    protected async void Delete()
+    {
+        await employeeService.DeleteEmployeeAsync(employee);
+        NavigationManager.NavigateTo("Employees");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Employees");
+    }
+
+}
